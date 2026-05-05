@@ -1,0 +1,11 @@
+# Environments
+.env
+venv/
+__pycache__/
+*.pyc
+
+# Database (Never commit user data!)
+homework.db
+
+# Deploy artifacts
+*.zip
