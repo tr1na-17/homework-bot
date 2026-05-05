@@ -190,7 +190,7 @@ async def upcoming(update: Update, context: ContextTypes.DEFAULT_TYPE):
 if __name__ == '__main__':
     database.setup_database()
     
-    TOKEN = os.getenv("TELEGRAM_TOKEN")
+    TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
     if not TOKEN:
         print("ERROR: Could not find TELEGRAM_TOKEN. Make sure you set it in your .env file!")
         exit(1)
@@ -199,9 +199,11 @@ if __name__ == '__main__':
     
     # Restore pending notifications from database
     if app.job_queue:
+        print("Initializing JobQueue and restoring pending notifications...")
         pending_notifications = database.get_pending_notifications()
         for row in pending_notifications:
             t_id, u_id, subj, desc, d_date, n_time = row
+            logging.info(f"Restoring notification for task {t_id} at {n_time}")
             schedule_notification(app.job_queue, t_id, u_id, subj, desc, n_time)
             
     app.add_handler(CommandHandler("start", start))
